@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Microsoft Agent 365 — Interactive Learning Module</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ms-blue: #0078D4;
+    --ms-blue-dark: #005A9E;
+    --ms-blue-deeper: #003F7F;
+    --ms-blue-light: #EBF3FB;
+    --ms-blue-mid: #2B88D8;
+    --accent: #50E3C2;
+    --accent-warm: #FFB900;
+    --surface: #FFFFFF;
+    --surface-2: #F4F7FB;
+    --surface-3: #E8EEF8;
+    --border: rgba(0,120,212,0.13);
+    --border-strong: rgba(0,120,212,0.28);
+    --text-primary: #0D1B2A;
+    --text-secondary: #3A4F6A;
+    --text-muted: #7A92B0;
+    --correct: #107C10;
+    --correct-bg: #EBF5EB;
+    --wrong: #C50F1F;
+    --wrong-bg: #FDF0F0;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-lg: 18px;
+    --shadow: 0 2px 20px rgba(0,78,140,0.09);
+    --shadow-lg: 0 8px 48px rgba(0,78,140,0.14);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: linear-gradient(160deg, #E8EFF9 0%, #F2F6FC 50%, #EBF0F8 100%);
+    min-height: 100vh;
+    color: var(--text-primary);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem 1rem 4rem;
+  }
+
+  .shell { width: 100%; max-width: 780px; }
+
+  /* ── Header ── */
+  .module-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.25rem;
+  }
+  .ms-logo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; flex-shrink: 0; }
+  .ms-logo-grid span { display: block; width: 11px; height: 11px; border-radius: 2px; }
+  .r1{background:#F25022;} .r2{background:#7FBA00;} .r3{background:#00A4EF;} .r4{background:#FFB900;}
+  .header-text { flex: 1; }
+  .header-eyebrow { font-size: 11px; font-weight: 500; color: var(--ms-blue); letter-spacing: 0.1em; text-transform: uppercase; }
+  .header-title { font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 600; color: var(--text-primary); }
+  .header-right { font-size: 12px; color: var(--text-muted); text-align: right; }
+
+  /* ── Progress ── */
+  .progress-track { background: var(--surface-3); border-radius: 99px; height: 4px; margin-bottom: 6px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--ms-blue), var(--accent)); border-radius: 99px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); }
+  .progress-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 1.5rem; }
+
+  /* ── Card ── */
+  .card {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.38s cubic-bezier(0.22,1,0.36,1);
+  }
+  .card-accent-bar {
+    height: 4px;
+    background: linear-gradient(90deg, var(--ms-blue) 0%, var(--ms-blue-mid) 60%, var(--accent) 100%);
+    flex-shrink: 0;
+  }
+  .card-inner { padding: 2.2rem 2.5rem 2rem; display: flex; flex-direction: column; flex: 1; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Page 1 Hero ── */
+  .hero-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--ms-blue-light);
+    border: 1px solid rgba(0,120,212,0.2);
+    border-radius: 99px;
+    padding: 5px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ms-blue-dark);
+    margin-bottom: 1.5rem;
+    width: fit-content;
+  }
+  .hero-badge-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ms-blue); }
+  .hero-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.18;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+  }
+  .hero-title span { color: var(--ms-blue); }
+  .hero-sub {
+    font-size: 17.6px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 1.75rem;
+    max-width: 560px;
+  }
+  .hero-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 1.5rem;
+  }
+  .hero-card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .hero-card-icon { font-size: 20px; line-height: 1; }
+  .hero-card-title { font-size: 13.2px; font-weight: 500; color: var(--text-primary); }
+  .hero-card-desc { font-size: 12.1px; color: var(--text-muted); line-height: 1.5; }
+  .hero-preview-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,185,0,0.1);
+    border: 1px solid rgba(255,185,0,0.35);
+    border-radius: var(--radius-sm);
+    padding: 9px 14px;
+    font-size: 13.2px;
+    color: #6B4700;
+  }
+  .pill-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent-warm); flex-shrink: 0; }
+
+  /* ── Standard page chrome ── */
+  .page-eyebrow { font-size: 11px; font-weight: 500; color: var(--ms-blue); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+  .page-title { font-family: 'Sora', sans-serif; font-size: 26.4px; font-weight: 600; color: var(--text-primary); line-height: 1.22; margin-bottom: 1.4rem; }
+  .page-body { flex: 1; font-size: 16.5px; color: var(--text-secondary); line-height: 1.78; }
+  .page-body p { margin-bottom: 1.1rem; }
+  .page-body p:last-child { margin-bottom: 0; }
+  .page-body strong { font-weight: 500; color: var(--text-primary); }
+
+  /* ── Info box ── */
+  .info-box {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.35rem;
+    margin: 1.3rem 0;
+  }
+  .info-box-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ms-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 11px;
+  }
+
+  /* ── Bullet list ── */
+  .bullet-list { list-style: none; }
+  .bullet-list li {
+    display: flex;
+    gap: 11px;
+    align-items: flex-start;
+    padding: 8px 0;
+    font-size: 15.4px;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border);
+    line-height: 1.6;
+  }
+  .bullet-list li:last-child { border-bottom: none; padding-bottom: 0; }
+  .bdot { width: 6px; height: 6px; border-radius: 50%; background: var(--ms-blue-mid); flex-shrink: 0; margin-top: 9px; }
+
+  /* ── Callout ── */
+  .callout {
+    border-left: 3px solid var(--ms-blue);
+    background: var(--ms-blue-light);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 12px 16px;
+    margin: 1.1rem 0;
+    font-size: 15.4px;
+    color: var(--ms-blue-dark);
+    line-height: 1.65;
+  }
+
+  /* ── Superpowers grid ── */
+  .sp-grid { display: flex; flex-direction: column; gap: 0; }
+  .sp-item {
+    display: flex;
+    gap: 14px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+  .sp-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .sp-icon {
+    width: 38px; height: 38px;
+    border-radius: var(--radius-sm);
+    background: var(--ms-blue-light);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 18px;
+  }
+  .sp-title { font-size: 15.4px; font-weight: 500; color: var(--text-primary); margin-bottom: 3px; }
+  .sp-desc { font-size: 13.75px; color: var(--text-secondary); line-height: 1.58; }
+
+  /* ── Registry action list ── */
+  .action-list { display: flex; flex-direction: column; gap: 8px; margin: 1rem 0; }
+  .action-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+  }
+  .action-icon {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    background: var(--ms-blue-light);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 14px;
+  }
+  .action-text { font-size: 14.3px; color: var(--text-secondary); line-height: 1.5; padding-top: 3px; }
+
+  /* ── Blueprint rule cards ── */
+  .rule-cards { display: flex; flex-direction: column; gap: 8px; margin: 1rem 0; }
+  .rule-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 11px 14px;
+  }
+  .rule-card-quote { font-size: 14.3px; color: var(--text-secondary); font-style: italic; line-height: 1.5; }
+  .rule-icon { font-size: 16px; flex-shrink: 0; }
+
+  /* ── Layer diagram ── */
+  .layer-diagram { display: flex; flex-direction: column; gap: 6px; margin: 1.25rem 0; }
+  .layer-box { border-radius: var(--radius-sm); padding: 14px 18px; }
+  .layer-box.top { background: var(--ms-blue); color: #fff; }
+  .layer-box.bottom { background: var(--surface-2); border: 1px solid var(--border); color: var(--text-secondary); }
+  .layer-tag { font-size: 11px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; margin-bottom: 4px; opacity: 0.78; }
+  .layer-content { font-size: 14.3px; font-weight: 500; }
+  .layer-arrow { text-align: center; font-size: 13px; color: var(--text-muted); padding: 2px 0; }
+
+  /* ── Dev integration ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 1.25rem 0; }
+  .mini-card { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; }
+  .mini-label { font-size: 11px; font-weight: 600; color: var(--ms-blue); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
+  .mini-val { font-size: 14.3px; font-weight: 500; color: var(--text-primary); }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+  .tag { font-size: 13.2px; background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); padding: 4px 11px; color: var(--text-secondary); }
+
+  /* ── Licensing ── */
+  .lic-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 1.3rem 0; }
+  .lic-card { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+  .lic-card.preview { border-top: 3px solid #FFB900; }
+  .lic-card.ga { border-top: 3px solid #107C10; }
+  .lic-tag { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; display: block; }
+  .lic-tag.preview { color: #7A5500; }
+  .lic-tag.ga { color: #107C10; }
+
+  /* ── Registry agent type pills ── */
+  .agent-types { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 1rem 0; }
+  .agent-type-pill {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    font-size: 14.3px;
+    color: var(--text-secondary);
+  }
+  .atype-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── Quiz ── */
+  .q-counter { font-size: 12px; font-weight: 600; color: var(--ms-blue); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 9px; }
+  .q-text { font-family: 'Sora', sans-serif; font-size: 18.7px; font-weight: 500; color: var(--text-primary); line-height: 1.4; margin-bottom: 1.35rem; }
+  .qz-opts { display: flex; flex-direction: column; gap: 9px; }
+  .qz-opt {
+    width: 100%; text-align: left;
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 12px 16px;
+    font-size: 15.4px; color: var(--text-primary);
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    display: flex; gap: 12px; align-items: flex-start;
+    transition: border-color 0.15s, background 0.15s;
+    line-height: 1.55;
+  }
+  .qz-opt:hover:not(.disabled) { border-color: var(--ms-blue); background: var(--ms-blue-light); }
+  .qz-opt.correct { border-color: var(--correct); background: var(--correct-bg); color: var(--correct); }
+  .qz-opt.wrong { border-color: var(--wrong); background: var(--wrong-bg); color: var(--wrong); }
+  .qz-opt.disabled { pointer-events: none; }
+  .opt-letter { font-size: 12px; font-weight: 600; min-width: 20px; padding-top: 1px; opacity: 0.55; flex-shrink: 0; }
+  .qz-feedback { margin-top: 11px; padding: 11px 16px; border-radius: var(--radius-sm); font-size: 14.3px; line-height: 1.6; }
+  .qz-feedback.correct { background: var(--correct-bg); color: var(--correct); border: 1px solid rgba(16,124,16,0.2); }
+  .qz-feedback.wrong { background: var(--wrong-bg); color: var(--wrong); border: 1px solid rgba(197,15,31,0.2); }
+  .quiz-nav { display: flex; gap: 10px; margin-top: 1.5rem; align-items: center; }
+  .quiz-dots { display: flex; gap: 7px; align-items: center; flex: 1; justify-content: center; }
+  .qdot { width: 9px; height: 9px; border-radius: 50%; background: var(--surface-3); border: 1px solid var(--border-strong); transition: background 0.2s; cursor: pointer; }
+  .qdot.answered-correct { background: var(--correct); border-color: var(--correct); }
+  .qdot.answered-wrong { background: var(--wrong); border-color: var(--wrong); }
+  .qdot.current { background: var(--ms-blue); border-color: var(--ms-blue); }
+
+  /* ── Complete ── */
+  .complete-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem 0; }
+  .score-ring { width: 110px; height: 110px; margin-bottom: 1.25rem; }
+  .complete-title { font-family: 'Sora', sans-serif; font-size: 28.6px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+  .complete-sub { font-size: 16.5px; color: var(--text-secondary); max-width: 420px; line-height: 1.65; margin-bottom: 1.75rem; }
+  .score-label { font-size: 13px; color: var(--text-muted); margin-top: 6px; }
+
+  /* ── Nav ── */
+  .nav-bar { display: flex; align-items: center; justify-content: space-between; margin-top: 1.25rem; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 10px 20px; border-radius: var(--radius-sm);
+    font-size: 15.4px; font-family: 'DM Sans', sans-serif; font-weight: 500;
+    cursor: pointer; border: 1px solid var(--border-strong);
+    background: var(--surface); color: var(--text-primary);
+    transition: background 0.15s, border-color 0.15s;
+    text-decoration: none;
+  }
+  .btn:hover { background: var(--surface-2); border-color: var(--ms-blue); }
+  .btn:disabled { opacity: 0.3; cursor: default; pointer-events: none; }
+  .btn.primary { background: var(--ms-blue); color: #fff; border-color: var(--ms-blue); }
+  .btn.primary:hover { background: var(--ms-blue-dark); border-color: var(--ms-blue-dark); }
+  .page-dots { display: flex; gap: 6px; align-items: center; }
+  .pdot { width: 8px; height: 8px; border-radius: 50%; background: var(--surface-3); border: 1px solid var(--border-strong); cursor: pointer; transition: background 0.2s; }
+  .pdot.active { background: var(--ms-blue); border-color: var(--ms-blue); }
+  .pdot:hover:not(.active) { background: var(--ms-blue-light); }
+
+  @media (max-width: 600px) {
+    .card-inner { padding: 1.5rem 1.25rem; }
+    .hero-cards { grid-template-columns: 1fr; }
+    .two-col, .lic-grid, .agent-types { grid-template-columns: 1fr; }
+    .hero-title { font-size: 26px; }
+    body { padding: 1rem 0.75rem 3rem; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="module-header">
+    <div class="ms-logo-grid">
+      <span class="r1"></span><span class="r2"></span>
+      <span class="r3"></span><span class="r4"></span>
+    </div>
+    <div class="header-text">
+      <div class="header-eyebrow">Microsoft Learn</div>
+      <div class="header-title">Agent 365 — Interactive Overview</div>
+    </div>
+    <div class="header-right" id="header-right">Page 1 of 8</div>
+  </div>
+
+  <div class="progress-track">
+    <div class="progress-fill" id="pbar" style="width:12.5%"></div>
+  </div>
+  <div class="progress-meta">
+    <span id="progress-label">Introduction</span>
+    <span id="progress-pct">12%</span>
+  </div>
+
+  <div class="card" id="card">
+    <div class="card-accent-bar"></div>
+    <div class="card-inner" id="page-content"></div>
+  </div>
+
+  <div class="nav-bar">
+    <button class="btn" id="btn-prev" onclick="navigate(-1)">← Back</button>
+    <div class="page-dots" id="page-dots"></div>
+    <button class="btn primary" id="btn-next" onclick="navigate(1)">Next →</button>
+  </div>
+
+</div>
+
+<script>
+const CONTENT_PAGES = 8;
+let current = 0;
+let quizState = { qi: 0, answers: {}, submitted: {} };
+
+const pages = [
+  {
+    eyebrow: 'Page 1 — Introduction',
+    title: 'So\u2026 what exactly is Agent 365?',
+    section: 'Introduction',
+    render: () => `
+      <div class="hero-wrap">
+        <div class="hero-badge"><span class="hero-badge-dot"></span>Microsoft Agent 365 Overview</div>
+        <div class="hero-title">The enterprise layer<br>for <span>every agent</span> you build.</div>
+        <div class="hero-sub">
+          You've already built agents. They reason well, use tools, get real work done. <b>Agent 365</b> isn't another agent builder — it's what makes agents <strong>safe, governable, and IT-trusted</strong> at enterprise scale.
+        </div>
+        <div class="hero-cards">
+          <div class="hero-card">
+            <div class="hero-card-icon">🪪</div>
+            <div class="hero-card-title">Identity</div>
+            <div class="hero-card-desc">Every agent gets its own Entra identity</div>
+          </div>
+          <div class="hero-card">
+            <div class="hero-card-icon">🛡️</div>
+            <div class="hero-card-title">Governance</div>
+            <div class="hero-card-desc">IT-approved blueprints define the rules</div>
+          </div>
+          <div class="hero-card">
+            <div class="hero-card-icon">🔭</div>
+            <div class="hero-card-title">Observability</div>
+            <div class="hero-card-desc">Every action traced and auditable</div>
+          </div>
+        </div>
+        <div class="hero-preview-pill">
+          <span class="pill-dot"></span>
+          <span>Currently in preview via the Microsoft Frontier Program — GA May 1, 2026</span>
+        </div>
+      </div>
+    `
+  },
+  {
+    eyebrow: 'Page 2 — The Problem',
+    title: 'The "shadow agent" problem',
+    section: 'Problem',
+    render: () => `
+      <p>This is already happening in enterprises today: someone builds an agent, deploys it, and it starts reading mail or posting to Teams. IT doesn't know it exists. No audit trail. No consistent way to control or shut it down.</p>
+      <p>That's the shadow agent problem — and it's the exact gap Agent 365 fills.</p>
+      <p>Microsoft 365 already has strong governance tools — Entra, Purview, Copilot Control System. But without Agent 365, governance across your agent estate is <strong>fragmented and inconsistent</strong>. Different agents governed differently, or not at all.</p>
+      <div class="info-box">
+        <div class="info-box-label">With Agent 365, every agent gets</div>
+        <ul class="bullet-list">
+          <li><span class="bdot"></span><span>A real identity IT can see and manage</span></li>
+          <li><span class="bdot"></span><span>A clear, auditable record of every action taken</span></li>
+          <li><span class="bdot"></span><span>Explicit, admin-approved access to Microsoft 365 data</span></li>
+          <li><span class="bdot"></span><span>A single authoritative view — including shadow agents</span></li>
+        </ul>
+      </div>
+      <p>Agents stop being rogue bots and become accountable digital workers that IT can approve, monitor, and trust.</p>
+    `
+  },
+  {
+    eyebrow: 'Page 3 — Capabilities',
+    title: 'Five capabilities, one SDK',
+    section: 'Capabilities',
+    render: () => `
+      <p>Agent 365 doesn't change how your agent thinks. It changes how your agent <strong>operates in an enterprise</strong>. Here's what it adds:</p>
+      <div class="info-box" style="padding: 0.75rem 1.1rem;">
+        <div class="sp-grid">
+          <div class="sp-item">
+            <div class="sp-icon">🪪</div>
+            <div><div class="sp-title">Its own identity</div><div class="sp-desc">A real Microsoft Entra identity with its own mailbox. Authenticates like a user, uses scoped permissions, appears in admin tooling.</div></div>
+          </div>
+          <div class="sp-item">
+            <div class="sp-icon">📬</div>
+            <div><div class="sp-title">Native M365 notifications</div><div class="sp-desc">Receives and responds to Teams messages, Outlook emails, and Word comment mentions — participating in workflows like a human colleague.</div></div>
+          </div>
+          <div class="sp-item">
+            <div class="sp-icon">🔭</div>
+            <div><div class="sp-title">Full observability</div><div class="sp-desc">Every tool call, inference, and decision is traced via OpenTelemetry. Admins and auditors can see exactly what happened and when.</div></div>
+          </div>
+          <div class="sp-item">
+            <div class="sp-icon">🔐</div>
+            <div><div class="sp-title">Governed M365 access</div><div class="sp-desc">Connects to Mail, Calendar, SharePoint, and Teams via admin-controlled MCP servers. No wildcard APIs, no accidental data exposure.</div></div>
+          </div>
+          <div class="sp-item">
+            <div class="sp-icon">📋</div>
+            <div><div class="sp-title">Blueprint-based governance</div><div class="sp-desc">Every agent instance is created from an IT-approved blueprint that defines what it can and cannot do.</div></div>
+          </div>
+        </div>
+      </div>
+    `
+  },
+  {
+    eyebrow: 'Page 4 — The Registry',
+    title: 'Where IT sees and manages every agent',
+    section: 'Registry',
+    render: () => `
+      <p>All of this governance needs somewhere IT can actually see and act on it. That place is the <strong>Agent Registry</strong> in the Microsoft 365 Admin Center — Agents → All Agents.</p>
+      <div class="info-box">
+        <div class="info-box-label">The Registry shows every agent in your tenant</div>
+        <div class="agent-types">
+          <div class="agent-type-pill"><span class="atype-dot" style="background:#0078D4;"></span>Microsoft-built agents</div>
+          <div class="agent-type-pill"><span class="atype-dot" style="background:#50E3C2;"></span>External partner agents</div>
+          <div class="agent-type-pill"><span class="atype-dot" style="background:#FFB900;"></span>Internally built agents</div>
+          <div class="agent-type-pill"><span class="atype-dot" style="background:#C50F1F;"></span>Shadow agents in the tenant</div>
+        </div>
+      </div>
+      <p>If it runs in your tenant, it shows up here. <strong>Nothing runs unseen.</strong></p>
+      <div class="action-list">
+        <div class="action-item"><div class="action-icon">✅</div><div class="action-text">Approve, deploy, or block agents for specific users or groups</div></div>
+        <div class="action-item"><div class="action-icon">📌</div><div class="action-text">Auto-deploy and pin agents so users don't need to install them</div></div>
+        <div class="action-item"><div class="action-icon">🚫</div><div class="action-text">Disable an agent instantly across the entire organization</div></div>
+        <div class="action-item"><div class="action-icon">👤</div><div class="action-text">Identify and manage ownerless agents</div></div>
+        <div class="action-item"><div class="action-icon">📊</div><div class="action-text">Export full inventory for audits and compliance reporting</div></div>
+        <div class="action-item"><div class="action-icon">⚠️</div><div class="action-text">Review live risk indicators from Entra security signals</div></div>
+      </div>
+    `
+  },
+  {
+    eyebrow: 'Page 5 — Blueprints',
+    title: 'Blueprints: governance by design',
+    section: 'Blueprints',
+    render: () => `
+      <p>A blueprint is the enterprise template for an agent type. Before any agent runs in your tenant, IT defines and approves a blueprint that sets the rules.</p>
+      <div class="rule-cards">
+        <div class="rule-card"><span class="rule-icon">📧</span><div class="rule-card-quote">"This agent can read email — but not send it."</div></div>
+        <div class="rule-card"><span class="rule-icon">📁</span><div class="rule-card-quote">"This agent can access SharePoint, but only specific sites."</div></div>
+        <div class="rule-card"><span class="rule-icon">📋</span><div class="rule-card-quote">"All actions must be logged for a defined retention period."</div></div>
+      </div>
+      <p>When a new agent instance is created — through the Admin Center or automated via the Agent 365 CLI — it inherits these rules automatically. No exceptions. No configuration drift.</p>
+      <div class="callout"><strong>The key idea:</strong> Blueprints separate permission from intelligence. IT owns what the agent is allowed to do. Developers own how the agent reasons and behaves. Everyone sleeps better.</div>
+      <p>Agents are also protected like users — with Entra Conditional Access, least-privilege permissions, and risk-based policies. If an agent is compromised, IT can disable it instantly.</p>
+    `
+  },
+  {
+    eyebrow: 'Page 6 — Developer Integration',
+    title: 'How developers plug all this in',
+    section: 'Developer Integration',
+    render: () => `
+      <p>Agent 365 is designed to be <strong>additive, not disruptive</strong>. Developers add it on top of an existing agent — no rebuild required.</p>
+      <div class="info-box">
+        <div class="info-box-label">Agent 365 SDK</div>
+        <p style="font-size:15.4px; color:var(--text-secondary); line-height:1.65; margin-bottom:10px;">Added to an existing agent to enable identity, notifications, observability, and governed tool access. Works across all major agent frameworks:</p>
+        <div class="tag-row">
+          <span class="tag">Copilot Studio</span>
+          <span class="tag">OpenAI Agents</span>
+          <span class="tag">LangChain</span>
+          <span class="tag">Semantic Kernel</span>
+          <span class="tag">Claude Code SDK</span>
+          <span class="tag">Azure AI Foundry</span>
+        </div>
+      </div>
+      <div class="info-box">
+        <div class="info-box-label">Agent 365 CLI</div>
+        <p style="font-size:15.4px; color:var(--text-secondary); line-height:1.65;">The command-line backbone. Creates blueprints, registers identities, configures MCP servers, deploys to Azure, and publishes to the M365 Admin Center.</p>
+      </div>
+      <div class="two-col">
+        <div class="mini-card"><div class="mini-label">CLI</div><div class="mini-val">Sets up enterprise infrastructure</div></div>
+        <div class="mini-card"><div class="mini-label">SDK</div><div class="mini-val">Wires capabilities into the agent</div></div>
+      </div>
+    `
+  },
+  {
+    eyebrow: 'Page 7 — The Big Picture',
+    title: 'One control plane for every agent',
+    section: 'The Big Picture',
+    render: () => `
+      <p>Enterprise AI has a build layer and a governance layer. Agent 365 provides the governance layer.</p>
+      <div class="layer-diagram">
+        <div class="layer-box top">
+          <div class="layer-tag">Agent 365 — the enterprise trust layer</div>
+          <div class="layer-content">Identity · Governance · Security · Observability · Audit</div>
+        </div>
+        <div class="layer-arrow">↑ applies consistently across every agent below, regardless of origin ↑</div>
+        <div class="layer-box top">
+          <div class="layer-tag">Agent creation — any tool, any stack, any cloud</div>
+          <div class="layer-content">Copilot Studio · Azure AI Foundry · OpenAI Agents · LangChain · Semantic Kernel · M365 Agents SDK</div>
+        </div>
+      </div>
+      <p>Agent 365 doesn't replace any of these tools. It <strong>standardizes</strong> how every agent is identified, governed, secured, and audited — regardless of how or where it was built. Azure, AWS, GCP — doesn't matter.</p>
+      <p>Operationally, everything flows into the Copilot Control System inside the Microsoft 365 Admin Center. IT governs the entire agent estate from one familiar place.</p>
+      <div class="callout">Without Agent 365, your agent estate is a patchwork. With it, IT has a single control plane. Agent 365 is what makes any agent enterprise-ready.</div>
+    `
+  },
+  {
+    eyebrow: 'Page 8 — Licensing',
+    title: 'Licensing — what to know upfront',
+    section: 'Licensing',
+    render: () => `
+      <p>Agent 365 is currently in preview through the Microsoft Frontier Program. Licensing today is different from how it'll work at general availability — worth knowing before budget conversations.</p>
+      <div class="lic-grid">
+        <div class="lic-card preview">
+          <span class="lic-tag preview">Today — Frontier Preview</span>
+          <ul class="bullet-list">
+            <li><span class="bdot" style="background:#FFB900;"></span><span>Tenant needs at least one M365 Copilot license</span></li>
+            <li><span class="bdot" style="background:#FFB900;"></span><span>Licenses assigned per agent instance</span></li>
+            <li><span class="bdot" style="background:#FFB900;"></span><span>Each instance must be licensed before activation</span></li>
+            <li><span class="bdot" style="background:#FFB900;"></span><span>Licensing handled automatically during activation</span></li>
+          </ul>
+        </div>
+        <div class="lic-card ga">
+          <span class="lic-tag ga">GA — May 1, 2026</span>
+          <ul class="bullet-list">
+            <li><span class="bdot" style="background:#107C10;"></span><span>Shifts to a per-user model</span></li>
+            <li><span class="bdot" style="background:#107C10;"></span><span>Agents acting on behalf of a licensed user are covered</span></li>
+            <li><span class="bdot" style="background:#107C10;"></span><span>Covered by Agent 365 or M365 E7 license</span></li>
+            <li><span class="bdot" style="background:#107C10;"></span><span>Agents don't need their own standalone license</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout">At GA: if a user is licensed, their agents are covered. No separate per-agent license needed.</div>
+    `
+  }
+];
+
+const questions = [
+  {
+    q: 'What is the primary purpose of Agent 365?',
+    opts: ['Build new AI agents from scratch', 'Add enterprise identity, governance, and observability to existing agents', 'Replace Copilot Studio for enterprise deployments', 'Manage Microsoft 365 user licenses'],
+    answer: 1,
+    fb: { c: 'Exactly right. Agent 365 extends existing agents — it doesn\'t build new ones. Think of it as additive SDK integration that brings enterprise trust.', w: 'Not quite. Agent 365 is not an agent builder. It extends existing agents with enterprise-grade capabilities — identity, governance, and observability.' }
+  },
+  {
+    q: 'What is a "blueprint" in Agent 365?',
+    opts: ['A visual diagram of the agent\'s reasoning flow', 'A developer code template for writing agents', 'An IT-approved governance template defining what an agent is allowed to do', 'A Microsoft Entra security policy for users'],
+    answer: 2,
+    fb: { c: 'Correct! A blueprint is the enterprise template that separates permission from intelligence — IT owns the rules, developers own the reasoning.', w: 'Not quite. A blueprint is an IT-approved governance template that defines an agent\'s allowed permissions and behaviors — not a code or architecture artifact.' }
+  },
+  {
+    q: 'How does Agent 365 licensing work at general availability (May 2026)?',
+    opts: ['One license per agent instance, purchased separately', 'Covered by the acting user\'s Agent 365 or M365 E7 license — agents don\'t need their own', 'Included free with any Microsoft 365 subscription', 'Licensed per MCP server connection'],
+    answer: 1,
+    fb: { c: 'Right! At GA, agents acting on behalf of a licensed user are covered by that user\'s license. No separate per-agent license needed.', w: 'Per-instance licensing is the Frontier preview model. At GA (May 2026), coverage flows from the user\'s license — agents don\'t need their own.' }
+  },
+  {
+    q: 'Where do IT admins go to see and manage every agent in the tenant?',
+    opts: ['Microsoft Entra admin center', 'Azure Portal → AI Services', 'Agent Registry in Microsoft 365 Admin Center (Agents → All Agents)', 'Microsoft Purview compliance portal'],
+    answer: 2,
+    fb: { c: 'Correct! The Agent Registry in M365 Admin Center is the single authoritative inventory — covering all agents including shadow agents — with full deploy, block, and audit controls.', w: 'While Entra and Purview play supporting roles, the Agent Registry in Microsoft 365 Admin Center (Agents → All Agents) is the primary operational control plane for IT admins.' }
+  }
+];
+
+function renderPage() {
+  const card = document.getElementById('card');
+  card.style.animation = 'none';
+  card.offsetHeight;
+  card.style.animation = 'fadeUp 0.38s cubic-bezier(0.22,1,0.36,1)';
+
+  if (current < CONTENT_PAGES) {
+    const p = pages[current];
+    document.getElementById('page-content').innerHTML =
+      (current === 0 ? '' : `<div class="page-eyebrow">${p.eyebrow}</div><div class="page-title">${p.title}</div>`) +
+      `<div class="page-body">${p.render()}</div>`;
+    document.getElementById('header-right').textContent = 'Page ' + (current + 1) + ' of 8';
+    document.getElementById('progress-label').textContent = p.section;
+    const pct = Math.round(((current + 1) / (CONTENT_PAGES + 2)) * 100);
+    document.getElementById('pbar').style.width = pct + '%';
+    document.getElementById('progress-pct').textContent = pct + '%';
+  } else if (current === CONTENT_PAGES) {
+    renderQuizPage();
+    document.getElementById('header-right').textContent = 'Knowledge Check';
+    document.getElementById('progress-label').textContent = 'Knowledge Check';
+    const pct = Math.round(((CONTENT_PAGES + 1) / (CONTENT_PAGES + 2)) * 100);
+    document.getElementById('pbar').style.width = pct + '%';
+    document.getElementById('progress-pct').textContent = pct + '%';
+  } else {
+    renderComplete();
+    document.getElementById('header-right').textContent = 'Complete';
+    document.getElementById('progress-label').textContent = 'Module complete';
+    document.getElementById('pbar').style.width = '100%';
+    document.getElementById('progress-pct').textContent = '100%';
+  }
+  updateNav();
+}
+
+function renderQuizPage() {
+  const qi = quizState.qi;
+  const q = questions[qi];
+  const submitted = quizState.submitted[qi] !== undefined;
+
+  let optsHtml = q.opts.map((opt, oi) => {
+    let cls = 'qz-opt';
+    if (submitted) {
+      cls += ' disabled';
+      if (oi === q.answer) cls += ' correct';
+      else if (quizState.answers[qi] === oi) cls += ' wrong';
+    }
+    return `<button class="${cls}" onclick="submitAnswer(${qi}, ${oi})">
+      <span class="opt-letter">${String.fromCharCode(65 + oi)}</span>
+      <span>${opt}</span>
+    </button>`;
+  }).join('');
+
+  let feedbackHtml = '';
+  if (submitted) {
+    const correct = quizState.answers[qi] === q.answer;
+    feedbackHtml = `<div class="qz-feedback ${correct ? 'correct' : 'wrong'}">${correct ? q.fb.c : q.fb.w}</div>`;
+  }
+
+  const dotsHtml = questions.map((_, i) => {
+    let cls = 'qdot';
+    if (i === qi) cls += ' current';
+    else if (quizState.submitted[i] !== undefined) {
+      cls += quizState.submitted[i] ? ' answered-correct' : ' answered-wrong';
+    }
+    return `<div class="${cls}" onclick="goToQ(${i})"></div>`;
+  }).join('');
+
+  const hasNext = qi < questions.length - 1;
+  const allDone = Object.keys(quizState.submitted).length === questions.length;
+
+  document.getElementById('page-content').innerHTML = `
+    <div class="page-eyebrow">Knowledge Check</div>
+    <div class="page-title">Let's see what stuck</div>
+    <div class="q-counter">Question ${qi + 1} of ${questions.length}</div>
+    <div class="q-text">${q.q}</div>
+    <div class="qz-opts">${optsHtml}</div>
+    ${feedbackHtml}
+    <div class="quiz-nav">
+      <button class="btn" onclick="goToQ(${qi - 1})" ${qi === 0 ? 'disabled' : ''}>← Prev</button>
+      <div class="quiz-dots">${dotsHtml}</div>
+      ${hasNext
+        ? `<button class="btn primary" onclick="goToQ(${qi + 1})">Next →</button>`
+        : allDone
+          ? `<button class="btn primary" onclick="navigate(1)">See results →</button>`
+          : `<button class="btn primary" disabled>Next →</button>`}
+    </div>
+  `;
+}
+
+function goToQ(qi) {
+  if (qi < 0 || qi >= questions.length) return;
+  quizState.qi = qi;
+  renderQuizPage();
+}
+
+function submitAnswer(qi, oi) {
+  if (quizState.submitted[qi] !== undefined) return;
+  quizState.answers[qi] = oi;
+  quizState.submitted[qi] = oi === questions[qi].answer;
+  renderQuizPage();
+}
+
+function renderComplete() {
+  const score = Object.values(quizState.submitted).filter(Boolean).length;
+  const total = questions.length;
+  const pct = score / total;
+  const circum = 251.2;
+  const offset = circum - pct * circum;
+  const msgs = {
+    4: 'You nailed every question. You know Agent 365 inside out.',
+    3: 'Strong understanding. Review the licensing or registry pages to top up.',
+    2: 'A solid start. Try going back through blueprints and the registry.',
+    1: 'Worth a second read-through — this is a nuanced topic!',
+    0: 'No worries — go back through the module and try again.'
+  };
+  const heads = { 4: 'Perfect score!', 3: 'Great work!', 2: 'Good effort!', 1: 'Keep learning!', 0: 'Give it another go!' };
+
+  document.getElementById('page-content').innerHTML = `
+    <div class="complete-wrap">
+      <svg class="score-ring" viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="45" cy="45" r="40" fill="none" stroke="#EBF0F8" stroke-width="7"/>
+        <circle cx="45" cy="45" r="40" fill="none" stroke="#0078D4" stroke-width="7"
+          stroke-linecap="round" stroke-dasharray="${circum}" stroke-dashoffset="${offset}"
+          transform="rotate(-90 45 45)" style="transition: stroke-dashoffset 1s ease;"/>
+        <text x="45" y="50" text-anchor="middle" font-size="18" font-weight="600"
+          fill="#0078D4" font-family="Sora, sans-serif">${score}/${total}</text>
+      </svg>
+      <div class="score-label">${Math.round(pct * 100)}% correct</div>
+      <div style="margin-top:1.25rem;">
+        <div class="complete-title">${heads[score] || 'Module complete!'}</div>
+        <div class="complete-sub">${msgs[score] || ''}</div>
+      </div>
+      <button class="btn primary" onclick="restartModule()">Start over</button>
+    </div>
+  `;
+}
+
+function restartModule() {
+  quizState = { qi: 0, answers: {}, submitted: {} };
+  current = 0;
+  renderPage();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next < 0 || next > CONTENT_PAGES + 1) return;
+  current = next;
+  renderPage();
+}
+
+function goTo(idx) {
+  if (idx < 0 || idx >= CONTENT_PAGES) return;
+  current = idx;
+  renderPage();
+}
+
+function updateNav() {
+  document.getElementById('btn-prev').disabled = current === 0;
+  const nextBtn = document.getElementById('btn-next');
+  if (current === CONTENT_PAGES - 1) {
+    nextBtn.textContent = 'Knowledge check →';
+    nextBtn.style.display = '';
+    nextBtn.disabled = false;
+  } else if (current === CONTENT_PAGES) {
+    nextBtn.textContent = 'See results →';
+    nextBtn.style.display = '';
+    nextBtn.disabled = Object.keys(quizState.submitted).length < questions.length;
+  } else if (current === CONTENT_PAGES + 1) {
+    nextBtn.style.display = 'none';
+  } else {
+    nextBtn.textContent = 'Next →';
+    nextBtn.style.display = '';
+    nextBtn.disabled = false;
+  }
+
+  const dotsEl = document.getElementById('page-dots');
+  dotsEl.innerHTML = '';
+  for (let i = 0; i < CONTENT_PAGES; i++) {
+    const d = document.createElement('div');
+    d.className = 'pdot' + (i === current ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  }
+
+  if (current >= CONTENT_PAGES) {
+    document.getElementById('btn-prev').onclick = () => {
+      current = current === CONTENT_PAGES ? CONTENT_PAGES - 1 : CONTENT_PAGES;
+      renderPage();
+    };
+  } else {
+    document.getElementById('btn-prev').onclick = () => navigate(-1);
+  }
+}
+
+renderPage();
+</script>
+</body>
+</html>
